@@ -3,7 +3,7 @@ pragma solidity ^0.5.6;
 //import "mortal.sol";
 
 
-contract Resource
+contract ResourceDAO
 {
     enum Status {Requested, Claimed, Completed}
     
@@ -70,7 +70,7 @@ contract Resource
         {
             //if (recipes[_recipeID].components[i] == address(0x0)) return; //exit if no additional components are required
             
-            Resource r = Resource(recipes[_recipeID].components[i]);
+            ResourceDAO r = ResourceDAO(recipes[_recipeID].components[i]);
             uint ramount =  recipes[_recipeID].amounts[i] * _amount; //Here we are multipling needed components with the requested amount
             uint rrecipe = recipes[_recipeID].componentRecipe[i];
 

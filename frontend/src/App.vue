@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import Token from './contracts/token'
+//import Token from './contracts/token'
 
 export default {
   name: 'App',

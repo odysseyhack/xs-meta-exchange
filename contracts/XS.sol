@@ -1,12 +1,11 @@
 pragma solidity ^0.5.6;
 pragma experimental ABIEncoderV2;
 
-import "./owned.sol";
-import "./Resource.sol";
+import "./ResourceDAO.sol";
 
 
 
-contract XS is owned {
+contract XS {
     
       
    struct pathway{
@@ -34,7 +33,7 @@ contract XS is owned {
 
     int256 public nresources;
 
-    constructor () public
+    constructor() public
     {
       nresources = 0;
     }
@@ -48,13 +47,13 @@ contract XS is owned {
         int256 id = toId[label];
         if (id > 0x0)//NOTE: id 0 reserved for any unmatched resource
         {
-           Resource res = Resource(toAddress[id]);
+           ResourceDAO res = ResourceDAO(toAddress[id]);
            res.request(amount);
         }
         else
         {   // NOTE
             nresources += 1;
-            Resource newres = new Resource(label);
+            ResourceDAO newres = new ResourceDAO(label);
             newres.request(amount);
             toAddress[nresources] = address(newres);
             toId[label] = nresources;
@@ -69,7 +68,7 @@ contract XS is owned {
       int[] memory ret= new int[](uint (nresources));
       for(uint i=0; i < uint(nresources); i++)
         {
-            Resource res = Resource(toAddress[int256(i+1)]);
+            ResourceDAO res = ResourceDAO(toAddress[int256(i+1)]);
 
             ret[i]= int(res.nrequests());
         }
@@ -81,7 +80,7 @@ contract XS is owned {
       string[] memory ret =new string[](uint (nresources));
       for(uint i=0; i < uint(nresources); i++)
         {
-            Resource res = Resource(toAddress[int256(i+1)]);
+            ResourceDAO res = ResourceDAO(toAddress[int256(i+1)]);
 
             ret[i]= string(res.label());
         }
@@ -93,7 +92,7 @@ contract XS is owned {
     //   string[] memory ret =new string[](uint (nresources));
     //   for(uint i=0; i < uint(nresources); i++)
     //     {
-    //         Resource res = Resource(toAddress[int256(i+1)]);
+    //         ResourceDAO res = ResourceDAO(toAddress[int256(i+1)]);
 
     //         ret[i]= string(res.label());
     //     }
@@ -110,7 +109,7 @@ contract XS is owned {
     //     for (uint i; i<resources.length;i++){
     
     //         //check if resource list existed;
-    //       res[i]= resource(resources[i],quantities[i]);
+    //       res[i]= ResourceDAO(resources[i],quantities[i]);
     //     }
     // }
     

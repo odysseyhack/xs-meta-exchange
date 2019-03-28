@@ -1,5 +1,5 @@
 import contract from 'truffle-contract'
-import barterArtifacts from '../../../build/contracts/barter.json'
+import barterArtifacts from '../../../build/contracts/Barter.json'
 
 const processTransfer = (transfer) => {
     return {
