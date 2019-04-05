@@ -16,6 +16,19 @@
           </v-card-text>
         </v-card-text>
       </v-card>
+
+       <v-card>
+        <v-card-text>
+          <v-card-title>
+            <div class="headline">Create New Resource</div>
+          </v-card-title>
+          <v-card-text>
+            <v-flex><v-text-field v-model="create.label" label="Name"></v-text-field></v-flex>
+            <v-flex><v-text-field v-model="create.amount" label="Amount"></v-text-field></v-flex>
+            <v-flex><v-btn @click="doCreate">Mint</v-btn></v-flex>
+          </v-card-text>
+        </v-card-text>
+      </v-card>
       <v-card v-if="isController">
         <v-card-text>
           <v-card-title>
@@ -55,6 +68,10 @@
 <script>
   export default {
     data: () => ({
+      create:{
+        label:'',
+        amount:0
+      },
       send: {
         address: '',
         amount: 0
@@ -80,6 +97,9 @@
       },
       doPrint () {
         this.$store.dispatch('Wallet/generateTokens', { to: this.print.address, amount: Number(this.print.amount)})
+      },
+      doCreate () {
+        this.$store.dispatch('Wallet/createTokens', { label: this.create.label, amount: Number(this.print.amount)})
       }
     },
     computed: {

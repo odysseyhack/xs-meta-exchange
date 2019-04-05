@@ -1,5 +1,6 @@
 import contract from 'truffle-contract'
 import barterArtifacts from '../../../build/contracts/Barter.json'
+import xsArtifacts from '../../../build/contracts/XS.json'
 
 const processTransfer = (transfer) => {
     return {
@@ -49,6 +50,10 @@ export default {
         // actions start
         async generateTokens ({ dispatch, state, getters }, { amount, to = false }) {
             state.instance.generateTokens(!to ? state.account : to, amount, getters.txParams)
+        },
+
+        async createTokens ({ dispatch, state, getters }, { amount, label }) {
+            state.instance.registerEntity(label, amount, getters.txParams)
         },
         async getBalance ({ state, commit }) {
             const res = await state.instance.balanceOf(state.account)
