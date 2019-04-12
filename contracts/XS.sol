@@ -4,6 +4,9 @@ pragma experimental ABIEncoderV2;
 import "./ResourceDAO.sol";
 
 contract XS {
+    
+    mapping( address => mapping(uint256 => uint256)) public wallets ; 
+    
 
     struct pathway{
       address from;
@@ -35,45 +38,60 @@ contract XS {
 
 
     // check if resource exists. If so, send order to resource, otherwise it should first create the resource and then send an order to it.
-    function request(string memory label,uint recipe, uint amount) public returns (bool success)
+    function request(string memory label,uint recipe, string memory location, uint amount) public returns (bool success)
     {
         //bytes32 label = sha3(_label);
         uint id = toId[label];
         if (id > 0x0)//NOTE: id 0 reserved for any unmatched resource
         {
            ResourceDAO res = ResourceDAO(toAddress[id]);
-           res.requestRecipe(recipe,amount);
+           res.requestRecipe(recipe, amount, location);
         }
         else //if resourece does not exist, create one, then request it
         {
             ResourceDAO res =  ResourceDAO(createResource(label));
-            res.requestRecipe(recipe,amount);
+            res.requestRecipe(recipe, amount, location);
         }
         return true;
     }
 
+    
+    function subtractAssets(address _address, uint _resourceID, uint amount) public{
+        //TODO:check for permission
+        wallets[_address][_resourceID] -= amount;
+    }
+    
+    function addAssets(address _address, uint _resourceID, uint amount) public{
+        //TODO:check for permissions
+        wallets[_address][_resourceID] += amount;
+    }
+    
+
     function createResource(string memory label) public returns (address){
         nresources += 1;
-        ResourceDAO newres = new ResourceDAO(label,nresources);
+        ResourceDAO newres = new ResourceDAO(label,nresources, address(this));
         toAddress[nresources] = address(newres);
         toId[label] = nresources;
         emit NewResource(label);
         return address(newres);
     }
 
-    //  function proposeExchange(uint[] memory inlets, uint[]  memory inletsamount , uint[] memory outlets, uint[] memory outletsamount) public returns (bool success)
-    //{
-        //bytes32 label = sha3(_label);
 
-    //    for(uint i = 0; i < outlets.length ; i++) //for the hackathon, this will always be 1
-    //    {
-    //         ResourceDAO output = ResourceDAO(toAddress[outlets[i]]);
-    //         output.addRecipe();
-    //    }
+    
+    //   function proposeExchange(uint[] memory inlets, uint[]  memory inletsamount , uint[] memory outlets, uint[] memory outletsamount) public returns (bool success)
+    // {
+    //     //bytes32 label = sha3(_label);
+        
+    //     for(uint i = 0; i < outlets.length ; i++) //for the hackathon, this will always be 1 
+    //     {
+    //          ResourceDAO output = ResourceDAO(toAddress[outlets[i]]);
+    //          output.addRecipe()
+    //     }
+        
 
+    //     return true;
+    // }
 
-    //    return true;
-    //}
 
     function listResources() public view returns ( int [] memory )
     {
