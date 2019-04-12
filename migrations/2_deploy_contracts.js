@@ -1,5 +1,5 @@
-const Barter = artifacts.require('Barter');
+const XS = artifacts.require('XS');
 
 module.exports = function(deployer) {
-    deployer.deploy(Barter)
+    deployer.deploy(XS)
 };

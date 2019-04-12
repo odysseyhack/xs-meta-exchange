@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import Wallet from './store/wallet'
+import XS from './store/XS'
 
 Vue.use(Vuex)
 
@@ -15,6 +15,6 @@ export default new Vuex.Store({
 
   },
   modules: {
-    Wallet
+    XS
   }
 })

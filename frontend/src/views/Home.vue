@@ -1,13 +1,13 @@
 <template>
-  <Wallet />
 </template>
 
 <script>
-  import Wallet from '../components/Wallet'
 
   export default {
+    mounted () {
+        this.$store.dispatch('XS/init')
+    },
     components: {
-      Wallet
     }
   }
 </script>
