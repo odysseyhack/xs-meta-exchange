@@ -33,7 +33,6 @@ contract XS {
       nresources = 0;
     }
 
-    event NewResource(string _label);
 
     // check if resource exists. If so, send order to resource, otherwise it should first create the resource and then send an order to it.
     function request(string memory label,uint recipe, uint amount) public returns (bool success)
@@ -54,7 +53,6 @@ contract XS {
     }
 
     function createResource(string memory label) public returns (address){
-
         nresources += 1;
         ResourceDAO newres = new ResourceDAO(label,nresources);
         toAddress[nresources] = address(newres);
@@ -127,4 +125,5 @@ contract XS {
     //     }
     // }
 
+    event NewResource(string _label);
 }
