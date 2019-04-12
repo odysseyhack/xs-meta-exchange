@@ -3,35 +3,30 @@ pragma experimental ABIEncoderV2;
 
 import "./ResourceDAO.sol";
 
-
-
 contract XS {
     
-      
-   struct pathway{
+    struct pathway{
       address from;
       uint amount;
       uint class;
       uint timestamp;
-  }
-  
-  
-  struct resource{
+    }
+    
+    
+    struct resource{
       uint id;
       uint quantity;
       //address addr;
       //uint timestamp;
       //uint[] components;
-  }
-  mapping(address=>pathway[]) pathways;
-
+    }
     
-    mapping (string => int256) public toId ;
-    mapping (int256 => address) public toAddress;
-    mapping( int =>resource[]) public recipes;    // id => id[]
-    resource[] public resourcesTMP;
+    mapping(address=>pathway[]) pathways;
+    
+    mapping (string => uint) public toId ;
+    mapping (uint => address) public toAddress;
 
-    int256 public nresources;
+    uint public nresources;
 
     constructor() public
     {
@@ -41,25 +36,44 @@ contract XS {
     event NewResource(string _label);
 
     // check if resource exists. If so, send order to resource, otherwise it should first create the resource and then send an order to it.
-    function request(string memory label, uint amount) public returns (bool success)
+    function request(string memory label,uint recipe, uint amount) public returns (bool success)
     {
         //bytes32 label = sha3(_label);
-        int256 id = toId[label];
+        uint id = toId[label];
         if (id > 0x0)//NOTE: id 0 reserved for any unmatched resource
         {
            ResourceDAO res = ResourceDAO(toAddress[id]);
-           res.request(amount);
+           res.requestRecipe(recipe,amount);
         }
-        else
-        {   // NOTE
-            nresources += 1;
-            ResourceDAO newres = new ResourceDAO(label);
-            newres.request(amount);
-            toAddress[nresources] = address(newres);
-            toId[label] = nresources;
-            
-            emit NewResource(label);
+        else //if resourece does not exist, create one, then request it
+        {   
+            ResourceDAO res =  ResourceDAO(createResource(label));
+            res.requestRecipe(recipe,amount);
         }
+        return true;
+    }
+    
+    function createResource(string memory label) public returns (address){
+        
+        nresources += 1;
+        ResourceDAO newres = new ResourceDAO(label,nresources);
+        toAddress[nresources] = address(newres);
+        toId[label] = nresources;
+        emit NewResource(label);
+        return address(newres);
+    }
+    
+      function proposeExchange(uint[] memory inlets, uint[]  memory inletsamount , uint[] memory outlets, uint[] memory outletsamount) public returns (bool success)
+    {
+        //bytes32 label = sha3(_label);
+        
+        for(uint i = 0; i < outlets.length ; i++) //for the hackathon, this will always be 1 
+        {
+             ResourceDAO output = ResourceDAO(toAddress[outlets[i]]);
+             output.addRecipe()
+        }
+        
+
         return true;
     }
 
@@ -68,7 +82,7 @@ contract XS {
       int[] memory ret= new int[](uint (nresources));
       for(uint i=0; i < uint(nresources); i++)
         {
-            ResourceDAO res = ResourceDAO(toAddress[int256(i+1)]);
+            ResourceDAO res = ResourceDAO(toAddress[i+1]);
 
             ret[i]= int(res.nrequests());
         }
@@ -80,7 +94,7 @@ contract XS {
       string[] memory ret =new string[](uint (nresources));
       for(uint i=0; i < uint(nresources); i++)
         {
-            ResourceDAO res = ResourceDAO(toAddress[int256(i+1)]);
+            ResourceDAO res = ResourceDAO(toAddress[i+1]);
 
             ret[i]= string(res.label());
         }
