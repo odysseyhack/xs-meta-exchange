@@ -4,15 +4,15 @@ pragma experimental ABIEncoderV2;
 import "./ResourceDAO.sol";
 
 contract XS {
-    
+
     struct pathway{
       address from;
       uint amount;
       uint class;
       uint timestamp;
     }
-    
-    
+
+
     struct resource{
       uint id;
       uint quantity;
@@ -20,9 +20,9 @@ contract XS {
       //uint timestamp;
       //uint[] components;
     }
-    
+
     mapping(address=>pathway[]) pathways;
-    
+
     mapping (string => uint) public toId ;
     mapping (uint => address) public toAddress;
 
@@ -46,15 +46,15 @@ contract XS {
            res.requestRecipe(recipe,amount);
         }
         else //if resourece does not exist, create one, then request it
-        {   
+        {
             ResourceDAO res =  ResourceDAO(createResource(label));
             res.requestRecipe(recipe,amount);
         }
         return true;
     }
-    
+
     function createResource(string memory label) public returns (address){
-        
+
         nresources += 1;
         ResourceDAO newres = new ResourceDAO(label,nresources);
         toAddress[nresources] = address(newres);
@@ -62,20 +62,20 @@ contract XS {
         emit NewResource(label);
         return address(newres);
     }
-    
-      function proposeExchange(uint[] memory inlets, uint[]  memory inletsamount , uint[] memory outlets, uint[] memory outletsamount) public returns (bool success)
-    {
-        //bytes32 label = sha3(_label);
-        
-        for(uint i = 0; i < outlets.length ; i++) //for the hackathon, this will always be 1 
-        {
-             ResourceDAO output = ResourceDAO(toAddress[outlets[i]]);
-             output.addRecipe()
-        }
-        
 
-        return true;
-    }
+    //  function proposeExchange(uint[] memory inlets, uint[]  memory inletsamount , uint[] memory outlets, uint[] memory outletsamount) public returns (bool success)
+    //{
+        //bytes32 label = sha3(_label);
+
+    //    for(uint i = 0; i < outlets.length ; i++) //for the hackathon, this will always be 1
+    //    {
+    //         ResourceDAO output = ResourceDAO(toAddress[outlets[i]]);
+    //         output.addRecipe();
+    //    }
+
+
+    //    return true;
+    //}
 
     function listResources() public view returns ( int [] memory )
     {
@@ -100,7 +100,7 @@ contract XS {
         }
         return ret;
     }
-    
+
     // function createMatrix() public view returns ( string [] memory)
     // {
     //   string[] memory ret =new string[](uint (nresources));
@@ -112,19 +112,19 @@ contract XS {
     //     }
     //     return ret;
     // }
-    
-    
+
+
    // index = 0; mapping (uint256 => address[]);
     //address[] storage b = mapping[index++];
-    
+
     // function addRecipe(uint  productID, uint[] memory resources, uint[] memory quantities) public{
     //     resource[] storage  res   = resources[productID];
-        
+
     //     for (uint i; i<resources.length;i++){
-    
+
     //         //check if resource list existed;
     //       res[i]= ResourceDAO(resources[i],quantities[i]);
     //     }
     // }
-    
+
 }

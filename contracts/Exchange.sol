@@ -79,17 +79,17 @@ contract Exchange is ERC1178 {
   uint256 minTokenPrice;
   uint256 minCount;
   string hello;
-  
+
   struct Transactor {
     address actor;
     uint256 amount;
   }
-  
+
   struct TokenExchangeRate {
     uint256 heldAmount;
     uint256 takeAmount;
   }
-  
+
   mapping(uint256 => uint256) public classIdToSupply;
   mapping(address => mapping(uint256 => uint256)) ownerToClassToBalance;
   mapping(address => mapping(uint256 => Transactor)) approvals;
@@ -97,10 +97,10 @@ contract Exchange is ERC1178 {
   mapping(address => mapping(uint256 => mapping(uint256 => TokenExchangeRate))) exchangeRates;
 
 
-    mapping (string => int256) public toId ;
-    mapping (int=> address) public toAddress;
- 
-    int256 public nresources;
+    mapping (string => uint256) public toId;
+    mapping (uint256 => address) public toAddress;
+
+    uint public nresources;
 
 
   // Constructor
@@ -231,12 +231,12 @@ contract Exchange is ERC1178 {
     tokenCount += supply;
     return true;
   }
-  
-  
+
+
    function request(string memory label, uint amount) public returns (bool success)
     {
         //bytes32 label = sha3(_label);
-        int256 id = toId[label];
+        uint256 id = toId[label];
         if (id > 0x0)//NOTE: id 0 reserved for any unmatched resource
         {
            ResourceDAO res = ResourceDAO(toAddress[id]);
@@ -249,9 +249,11 @@ contract Exchange is ERC1178 {
             newres.request(amount);
             toAddress[nresources] = address(newres);
             toId[label] = nresources;
-            
-            emit NewResource(label);
+
+            //emit NewResource(id, label);
         }
         return true;
     }
+
+    event NewResource (uint id, string label);
 }
