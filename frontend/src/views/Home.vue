@@ -1,13 +1,15 @@
 <template>
+    <resources/>
 </template>
 
 <script>
+    import Resources from '@/components/Resources'
 
   export default {
     mounted () {
-        this.$store.dispatch('XS/init')
     },
     components: {
+        Resources
     }
   }
 </script>

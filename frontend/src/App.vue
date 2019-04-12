@@ -9,7 +9,11 @@
     </v-toolbar>
 
     <v-content>
-      <router-view/>
+      <v-layout justify-center align-center>
+        <v-flex xs12 md8 lg6>
+          <router-view/>
+        </v-flex>
+      </v-layout>
     </v-content>
   </v-app>
 </template>
@@ -20,5 +24,15 @@ export default {
   created () {
     this.$store.dispatch('XS/init')
   },
+  computed: {
+    resources () {
+      return this.$store.state.XS.resources
+    }
+  },
+  watchers: {
+    resources (newVal) {
+      console.log(newVal)
+    }
+  }
 }
 </script>
