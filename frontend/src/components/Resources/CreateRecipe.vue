@@ -71,6 +71,11 @@
                 }
             ]
         }),
+        computed: {
+            selectedComponentAddresses () {
+                return this.components.map((i) => i.resource.address)
+            }
+        },
         methods: {
             resourceSelected (index, resource) {
                 console.log(resource)
@@ -91,8 +96,10 @@
             close () {
                 this.isOpen = false
             },
-            submit () {
-                this.contract.addRecipe(this.label, this.components.selectedAddresses, [0], this.components.map(() => 0))
+            async submit () {
+                const accounts = await window.web3.eth.getAccounts()
+
+                this.contract.addRecipe(this.label, this.selectedComponentAddresses, [0], this.components.map(() => 0), { from: accounts[0] })
             }
         }
     }
