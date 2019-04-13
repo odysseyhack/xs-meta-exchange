@@ -1,5 +1,5 @@
 {
-  "name": "Boilerplate",
+  "name": "xs_exchange",
   "version": "0.0.1",
   "description": "For XSperimentation purposes",
   "main": "truffle.js",
@@ -11,7 +11,8 @@
     "deploy": "truffle deploy",
     "compile": "truffle compile",
     "install-deps": "yarn && cd frontend && yarn && cd ..",
-    "start-frontend": "cd frontend && yarn serve"
+    "start-frontend": "cd frontend && yarn serve",
+    "start-rx": "cd rx-electron && npm start"
   },
   "dependencies": {
     "lodash": "^4.17.4",
