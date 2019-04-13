@@ -35,6 +35,7 @@ export default {
             id = id.words[0]
 
             const address = await state.contracts.XS.toAddress(1)
+
             commit('addResource', {
                 label,
                 id,

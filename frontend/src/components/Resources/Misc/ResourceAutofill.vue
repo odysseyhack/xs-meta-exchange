@@ -4,6 +4,7 @@
         :items="labels"
         no-data-text="Creates new resource"
         placeholder="Resource"
+        outline
     ></v-autocomplete>
 </template>
 
@@ -16,6 +17,11 @@
         computed: {
             labels () {
                 return this.$store.state.XS.resources.map((i) => i.label)
+            }
+        },
+        watch: {
+            selection (newVal) {
+                this.$emit('change', newVal)
             }
         }
     }

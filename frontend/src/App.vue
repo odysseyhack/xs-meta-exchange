@@ -10,8 +10,8 @@
 
     <v-content>
       <v-layout justify-center align-center>
-        <v-flex xs12 md8 lg6>
-          <router-view/>
+        <v-flex xs12 md8 lg6 style="margin-top: 70px">
+          <router-view />
         </v-flex>
       </v-layout>
     </v-content>
@@ -23,7 +23,7 @@ import Web3 from 'web3'
 
 export default {
   name: 'App',
-  created () {
+  mounted () {
     this.init()
   },
   methods: {
@@ -46,15 +46,5 @@ export default {
       }
     }
   },
-  computed: {
-    resources () {
-      return this.$store.state.XS.resources
-    }
-  },
-  watchers: {
-    resources (newVal) {
-      console.log(newVal)
-    }
-  }
 }
 </script>

@@ -29,7 +29,7 @@
 </template>
 
 <script>
-    import ResourceAutofill from './RequestResource/ResourceAutofill'
+    import ResourceAutofill from './Misc/ResourceAutofill'
 
     export default {
         name: "CreateResource",

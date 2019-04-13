@@ -7,6 +7,8 @@
             <v-list>
                 <v-list-tile
                     v-for="resource in resources"
+                    ripple
+                    :to="`/resource/${resource.address}`"
                 >
                     {{ resource.label }}
                 </v-list-tile>
