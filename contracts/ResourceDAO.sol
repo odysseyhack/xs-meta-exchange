@@ -1,11 +1,7 @@
 pragma solidity ^0.5.6;
 
-import "./XS.sol";
-
 contract ResourceDAO //is also a full `DAO' (using either Giveth or Aragon)
 {
-    XS exchange;
-    
     enum Status {Requested, Claimed, Completed}
     
     enum Assets {Time, Energy, Transportation, Waste}
@@ -23,7 +19,7 @@ contract ResourceDAO //is also a full `DAO' (using either Giveth or Aragon)
         address requester;
         uint recipeID;
         uint amounts;
-        string location; //(geohash)
+        //string location; //(geohash)
         uint8 status;
         uint creation;
         //string IPFSInfo;
@@ -49,13 +45,12 @@ contract ResourceDAO //is also a full `DAO' (using either Giveth or Aragon)
 
     event NewRequest(string _label , uint recipeID, uint amount );
 
-    constructor (string memory _label, uint _id, address _exchange) public
+    constructor (string memory _label, uint _id) public
     {
         nrequests = 0;
         nrecipes = 0;
         bestrecipe = 0;
         label = _label;
-        exchange = XS(_exchange);
         id = _id;
     }
     
@@ -64,16 +59,16 @@ contract ResourceDAO //is also a full `DAO' (using either Giveth or Aragon)
     // The order is forwarded to all sub-resources,
     // The bestrecipe should be decided using token-curated registries
     // 
-    function request(uint _amount, string memory _location) public 
+    function request(uint _amount) public 
     {
-        requestRecipe(bestrecipe, _amount, _location);
+        requestRecipe(bestrecipe, _amount);
     }
     
     // The 
     // call for specific recipe
-    function requestRecipe(uint _recipeID, uint _amount, string memory _location) public 
+    function requestRecipe(uint _recipeID, uint _amount) public 
     {
-        Request memory order = Request (msg.sender, _recipeID, _amount,  _location, 0 , now);
+        Request memory order = Request (msg.sender, _recipeID, _amount,  0 , now);
         nrequests += _amount;
         requests.push(order);
         
@@ -88,7 +83,7 @@ contract ResourceDAO //is also a full `DAO' (using either Giveth or Aragon)
             uint rrecipe = recipes[_recipeID].componentRecipe[i];
             
             ResourceDAO r = ResourceDAO(recipes[_recipeID].components[i]);
-            r.requestRecipe(rrecipe, ramount,_location);
+            r.requestRecipe(rrecipe, ramount);
         }
         
         //Notify listeners
@@ -98,14 +93,16 @@ contract ResourceDAO //is also a full `DAO' (using either Giveth or Aragon)
     function getRequestInfo(uint requestId ) public view returns (
       address requester,
       uint amounts,
-      string memory location,
+      //string memory lat,
+      //string memory lon,
       uint status,
       uint creation
     ){
       Request storage order =  requests[ requestId ];
       requester = order.requester;
       amounts = order.amounts;
-      location = order.location;
+      //lat = order.lat;
+      //lon = order.lon;
       status = order.status;
       creation = order.creation;
 
@@ -123,14 +120,11 @@ contract ResourceDAO //is also a full `DAO' (using either Giveth or Aragon)
     function confirm(uint requestId) public
     {
         Request storage order = requests[requestId];
-        order.status = 2;
+        order.status = 2; //Status::Completed;
         //Transfer agreed amount from requester to supplier
-        
-        exchange.addAssets(msg.sender,id, order.amounts);
-        exchange.subtractAssets(order.requester, id, order.amounts);//+= order.amounts;
-        //exchange.wallets[order.requester][id] -= order.amounts;
-        //exchange.wallets[msg.sender][id] += order.amounts;
-       
+        //eg:
+        //time.balanceOf[msg.sender] += order.amounts;
+        //time.balanceOf[order.requester] -= order.amounts;
     }
     
     // function getTruePrice(uint recipeID) view public returns (uint) {
@@ -143,17 +137,15 @@ contract ResourceDAO //is also a full `DAO' (using either Giveth or Aragon)
     // }
     
     
-    
-    
+        
     function getTruePrice(uint recipeID) view public returns (uint[] memory) {
-       require(recipeID  <= nrecipes);
-       uint[] memory result = new uint[](exchange.nresources()+1); // resource 0 is deiscarded
-       if ( nrecipes == 0 )  {
-           result[id]++;
-           return result; // exit recursion on basic resources;
-       }
+
+       uint[] memory result;
+       if ( nrecipes == 0 )  return result; // exit recursion on basic resources;
+   
         for (uint i = 0; i < recipes[recipeID].components.length; i++){
             ResourceDAO r = ResourceDAO(recipes[recipeID].components[i]);
+            result[r.id()]++;
             result = mulVectors(addVectors(result, r.getTruePrice(recipes[recipeID].componentRecipe[i])),recipes[recipeID].amounts[i]);
         }
         return result;
@@ -164,7 +156,7 @@ contract ResourceDAO //is also a full `DAO' (using either Giveth or Aragon)
     {
         uint[] memory v =  new uint[](lhs.length); 
         for (uint i = 0; i < lhs.length; i++)
-            v[i] = lhs[i] + rhs[i];
+            v[i] = lhs[i] - rhs[i];
         return v;
     }
 

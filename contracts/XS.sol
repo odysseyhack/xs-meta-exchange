@@ -4,9 +4,9 @@ pragma experimental ABIEncoderV2;
 import "./ResourceDAO.sol";
 
 contract XS {
-
-    mapping( address => mapping(uint256 => uint256)) public wallets ;
-
+    
+    mapping( address => mapping(uint256 => uint256)) public wallets ; 
+    
 
     struct pathway{
       address from;
@@ -55,21 +55,19 @@ contract XS {
         return true;
     }
 
-
+    
     function subtractAssets(address _address, uint _resourceID, uint amount) public{
         //TODO:check for permission
         wallets[_address][_resourceID] -= amount;
     }
-
+    
     function addAssets(address _address, uint _resourceID, uint amount) public{
         //TODO:check for permissions
         wallets[_address][_resourceID] += amount;
     }
-
+    
 
     function createResource(string memory label) public returns (address){
-        require(toId[label] == 0x0);
-
         nresources += 1;
         ResourceDAO newres = new ResourceDAO(label,nresources, address(this));
         toAddress[nresources] = address(newres);
@@ -79,17 +77,17 @@ contract XS {
     }
 
 
-
+    
     //   function proposeExchange(uint[] memory inlets, uint[]  memory inletsamount , uint[] memory outlets, uint[] memory outletsamount) public returns (bool success)
     // {
     //     //bytes32 label = sha3(_label);
-
-    //     for(uint i = 0; i < outlets.length ; i++) //for the hackathon, this will always be 1
+        
+    //     for(uint i = 0; i < outlets.length ; i++) //for the hackathon, this will always be 1 
     //     {
     //          ResourceDAO output = ResourceDAO(toAddress[outlets[i]]);
     //          output.addRecipe()
     //     }
-
+        
 
     //     return true;
     // }
