@@ -19,10 +19,32 @@
 </template>
 
 <script>
+import Web3 from 'web3'
+
 export default {
   name: 'App',
   created () {
-    this.$store.dispatch('XS/init')
+    this.init()
+  },
+  methods: {
+    async init () {
+      await this.initWeb3()
+      await this.$store.dispatch('XS/init')
+    },
+    async initWeb3 () {
+      if (window.ethereum) {
+        window.web3 = new Web3(window.ethereum)
+        try {
+          await ethereum.enable()
+        } catch (e) {
+          alert('No permission was granted')
+        }
+      } else if (window.web3) {
+        window.web3 = new Web3(window.web3.currentProvider)
+      } else {
+        alert('Please install MetaMask')
+      }
+    }
   },
   computed: {
     resources () {
