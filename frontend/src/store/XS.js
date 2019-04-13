@@ -1,8 +1,5 @@
-import contract from 'truffle-contract'
 import Vue from 'vue'
-
-// import barterArtifacts from '../../../build/contracts/Barter.json'
-import xsArtifacts from '../../../build/contracts/XS.json'
+import xsInstance from '@/contracts/XS'
 
 export default {
     namespaced: true,
@@ -25,9 +22,7 @@ export default {
             commit('setAccount', accounts[0])
         },
         async getContract ({ commit }) {
-            const instance = await contract(xsArtifacts)
-            instance.setProvider(window.ethereum)
-            commit('setXSInstance', await instance.deployed())
+            commit('setXSInstance', await xsInstance.deployed())
         },
         async createResource ({ state, getters }, label) {
             await state.contracts.XS.createResource(label, getters.txParams)
