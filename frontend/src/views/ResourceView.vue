@@ -10,7 +10,7 @@
             </v-btn>
         </v-card-actions>
 
-        <create-recipe ref="createRecipe" />
+        <create-recipe ref="createRecipe" :contract="contract" />
     </v-card>
 </template>
 

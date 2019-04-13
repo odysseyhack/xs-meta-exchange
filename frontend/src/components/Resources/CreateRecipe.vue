@@ -56,6 +56,7 @@
 
     export default {
         name: "CreateRecipe",
+        props: ['contract'],
         components: {
             ResourceDropdown,
             RecipeDropdown
@@ -91,11 +92,7 @@
                 this.isOpen = false
             },
             submit () {
-                this.$parent.contract.addRecipe(label, this.$refs.components.selectedAddresses, [0], this.$refs.components.map(() => 0))
-                // componentRecipe ??
-                //this.$parent.contract.addRecipe(this.)
-
-                //this.close()
+                this.contract.addRecipe(this.label, this.components.selectedAddresses, [0], this.components.map(() => 0))
             }
         }
     }
