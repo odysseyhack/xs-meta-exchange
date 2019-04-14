@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { Resource } from '../models/resource';
 import {Web3Service} from '../util/web3.service';
+import { emit } from 'cluster';
 
 const resource_artifacts = require('../../../../build/contracts/XS.json');
 
@@ -10,6 +11,7 @@ const resource_artifacts = require('../../../../build/contracts/XS.json');
   styleUrls: ['./daoreader.component.scss']
 })
 export class DaoReaderComponent {
+  @Output() changeResource = new EventEmitter<string>(); 
   resources: Resource[] = [];
   selectedresource: Resource
   contractAbstraction: any
@@ -20,8 +22,10 @@ export class DaoReaderComponent {
   }
 
   ngOnInit(){
-    this.resources.push({id:"123",version:1,name:"Team4Resources"})
-    this.selectedresource = this.resources[0];
+    this.resources.push({id:"124",version:1,name:"sample"})
+    this.resources.push({id:"123",version:1,name:"team4fooddata"})
+    this.resources.push({id:"125",version:1,name:"sampleResource"})
+    this.selectedresource = this.resources[2];
     //this.monitorDAO();
     this.web3Service.artifactsToContract(resource_artifacts)
       .then((resAbstraction) => {
@@ -39,7 +43,7 @@ export class DaoReaderComponent {
   }
 
   public getResource(){
-
+    this.changeResource.emit(this.selectedresource.name)
   }
 
   async refreshGraph(){
@@ -47,7 +51,7 @@ export class DaoReaderComponent {
       try {
         //const deployedResource = await this.resdata.deployed();
         console.log(this.contractInstance);
-        var data = await this.contractInstance.listResources()
+        var data = await this.contractInstance.listResourcesName()
         //console.log('Resource updates', this.selectedresource);
 
         //const resourceData = await this.contractInstance.ResourceDAO.call(this.selectedresource);

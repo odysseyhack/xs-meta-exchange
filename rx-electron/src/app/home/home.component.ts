@@ -6,5 +6,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
+  private selectedresource: string
 
+  public onResourceChange(resource:string){
+    this.selectedresource = resource
+  }
 }

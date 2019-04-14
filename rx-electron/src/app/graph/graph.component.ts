@@ -1,9 +1,9 @@
-import { Component, NgZone } from '@angular/core';
+import { Component, NgZone, Input, SimpleChange } from '@angular/core';
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import * as am4plugins_forceDirected from "@amcharts/amcharts4/plugins/forceDirected"; 
-import { DATA } from '../../assets/team4fooddata.json'
+//import { DATA } from '../../assets/team4fooddata.json'
 
 am4core.useTheme(am4themes_animated);
 
@@ -13,37 +13,51 @@ am4core.useTheme(am4themes_animated);
   styleUrls: ['./graph.component.scss']
 })
 export class GraphComponent {
+  @Input() resourceName: string
+  private networkSeries: am4plugins_forceDirected.ForceDirectedSeries
 
   private chart: am4plugins_forceDirected.ForceDirectedTree //any //am4charts.ForceDirectedTree;
 
-constructor(private zone: NgZone) {}
+  constructor(private zone: NgZone) {}
 
   ngOnInit(){
   }
 
+  ngOnChanges(changes: {[propKey: string]: SimpleChange}){
+    if (changes['resourceName'].isFirstChange()) {
+      if(!this.resourceName)
+        this.resourceName = "sampleResource"
+    }
+    if (!changes['resourceName'].isFirstChange()) {
+      if (this.resourceName){
+        this.networkSeries.data = require('../../assets/'+this.resourceName+'.json')
+        this.chart.reinit()
+      }
+    }
+  }
   ngAfterViewInit() {
     this.zone.runOutsideAngular(() => {
       //let chart = am4core.create("chartdiv", am4charts.XYChart);
   
       let chart = am4core.create("chartdiv", am4plugins_forceDirected.ForceDirectedTree);
 
-    let networkSeries = chart.series.push(new am4plugins_forceDirected.ForceDirectedSeries())
-    networkSeries.dataFields.linkWith = "linkWith";
-    networkSeries.dataFields.name = "name";
-    networkSeries.dataFields.id = "name";
-    networkSeries.dataFields.value = "value";
-    networkSeries.dataFields.children = "children";
+    this.networkSeries = chart.series.push(new am4plugins_forceDirected.ForceDirectedSeries())
+    this.networkSeries.dataFields.linkWith = "linkWith";
+    this.networkSeries.dataFields.name = "name";
+    this.networkSeries.dataFields.id = "name";
+    this.networkSeries.dataFields.value = "value";
+    this.networkSeries.dataFields.children = "children";
 
-    networkSeries.nodes.template.label.text = "{name}"
-    networkSeries.fontSize = 8;
+    this.networkSeries.nodes.template.label.text = "{name}"
+    this.networkSeries.fontSize = 8;
 
-    let nodeTemplate = networkSeries.nodes.template;
+    let nodeTemplate = this.networkSeries.nodes.template;
     nodeTemplate.tooltipText = "{name}";
     nodeTemplate.fillOpacity = 1;
     nodeTemplate.label.hideOversized = true;
     nodeTemplate.label.truncate = true;
 
-    let linkTemplate = networkSeries.links.template;
+    let linkTemplate = this.networkSeries.links.template;
     linkTemplate.strokeWidth = 1;
     let linkHoverState = linkTemplate.states.create("hover");
     linkHoverState.properties.strokeOpacity = 1;
@@ -62,8 +76,8 @@ constructor(private zone: NgZone) {}
             link.isHover = false;
         })
     })
-
-    networkSeries.data = DATA
+    const data = require('../../assets/'+this.resourceName+'.json')
+    this.networkSeries.data = data
   
       this.chart = chart;
     });
