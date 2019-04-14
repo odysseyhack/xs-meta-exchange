@@ -2,6 +2,7 @@
     <v-dialog v-model="isOpen" max-width="600">
         <v-card>
             <v-card-title class="headline">Request resource</v-card-title>
+
             <v-card-text>
                 <v-text-field
                     v-model="amount"
@@ -9,6 +10,7 @@
                     outline
                 ></v-text-field>
 
+                <resource-autofill ref="resource" />
             </v-card-text>
 
             <v-card-actions>
@@ -30,28 +32,27 @@
     import ResourceAutofill from './Misc/ResourceAutofill'
 
     export default {
+        props: [],
         name: "CreateResource",
         data: () => ({
             isOpen: false,
             resource: '',
-            amount: 0,
-            recipeId: 0,
-            recipeName: ''
+            amount: 0
         }),
         methods: {
-            open (label, recipeId, recipeName) {
+            open () {
                 this.isOpen = true
-                this.label = label
-                this.recipeId = recipeId
-                this.recipeName = recipeName
             },
             close () {
                 this.isOpen = false
             },
-            async submit () {
-                const accounts = await window.web3.eth.getAccounts()
-                console.log(this.label, this.recipeId, 'LOCATION', this.amount)
-                this.$store.state.XS.contracts.XS.request(this.label, this.recipeId, 'LOCATION', this.amount, { from: accounts[0] })
+            submit () {
+                const resource = this.$refs.Resource.resource
+
+                this.$store.dispatch('Wallet/generateTokens', {
+                    to: this.print,
+                    amount: Number(this.amount)
+                })
                 this.close()
             }
         },

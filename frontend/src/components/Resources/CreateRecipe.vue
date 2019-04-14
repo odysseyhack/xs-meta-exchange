@@ -78,7 +78,6 @@
         },
         methods: {
             resourceSelected (index, resource) {
-                console.log(resource)
                 this.components[index].resource = resource
             },
             addComponent () {
@@ -98,8 +97,9 @@
             },
             async submit () {
                 const accounts = await window.web3.eth.getAccounts()
-
+                console.log(this.label, this.selectedComponentAddresses, [0], this.components.map(() => 0))
                 this.contract.addRecipe(this.label, this.selectedComponentAddresses, [0], this.components.map(() => 0), { from: accounts[0] })
+                this.close()
             }
         }
     }

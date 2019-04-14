@@ -3,6 +3,7 @@ import Vuetify from 'vuetify/lib'
 import 'vuetify/src/stylus/app.styl'
 
 Vue.use(Vuetify, {
+  /*
   theme: {
     primary: '#ee44aa',
     secondary: '#424242',
@@ -11,7 +12,7 @@ Vue.use(Vuetify, {
     info: '#2196F3',
     success: '#4CAF50',
     warning: '#FFC107'
-  },
+  }, */
   options: {
     customProperties: true
   },

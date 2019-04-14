@@ -3,6 +3,7 @@
         :items="recipes"
         v-model="selected"
         outline
+        placeholder="Recipe"
     ></v-select>
 </template>
 
@@ -25,10 +26,18 @@
                 this.contract = await ResourceDAO.at(this.resourcedaoAddress)
 
                 this.getRecipes()
+                this.onNewRecipe()
             },
             async getRecipes () {
                 this.recipes = await this.contract.getRecipes()
-            }
+            },
+            async onNewRecipe () {
+                const blockState = await window.web3.eth.isSyncing()
+
+                this.contract.NewRecipe({ fromBlock: blockState.currentBlock, toBlock: 'latest' }, (err, res) => {
+                    this.getRecipes()
+                })
+            },
         }
     }
 </script>

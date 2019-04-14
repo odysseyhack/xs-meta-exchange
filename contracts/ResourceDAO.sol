@@ -37,8 +37,8 @@ contract ResourceDAO //is also a full `DAO' (using either Giveth or Aragon)
     //mapping(int=>Resource[]) components;
     //mapping(int=>int[]) quantities;
 
-    uint nrecipes;
-    uint bestrecipe; // Selected by DAO prosumer signaling
+    uint public nrecipes;
+    uint public bestrecipe; // Selected by DAO prosumer signaling
 
 
     Request[] public requests;
@@ -49,6 +49,7 @@ contract ResourceDAO //is also a full `DAO' (using either Giveth or Aragon)
 
 
     event NewRequest(string _label , uint recipeID, uint amount );
+    event NewRecipe(string _label);
 
     constructor (string memory _label, uint _id, address _exchange) public
     {
@@ -134,10 +135,14 @@ contract ResourceDAO //is also a full `DAO' (using either Giveth or Aragon)
 
     }
 
-    function getRecipes () view public returns (string[] memory res) {
+    function getRecipes () view public returns (string[] memory) {
+        string[] memory res = new string[](nrecipes);
+
         for (uint i = 0; i < nrecipes; i++) {
             res[i] = recipes[i].name;
         }
+
+        return res;
     }
 
     // function getTruePrice(uint recipeID) view public returns (uint) {
@@ -153,7 +158,6 @@ contract ResourceDAO //is also a full `DAO' (using either Giveth or Aragon)
 
 
     function getTruePrice(uint recipeID) view public returns (uint[] memory) {
-       require(recipeID  <= nrecipes);
        uint[] memory result = new uint[](exchange.nresources()+1); // resource 0 is deiscarded
        if ( nrecipes == 0 )  {
            result[id]++;
@@ -186,6 +190,7 @@ contract ResourceDAO //is also a full `DAO' (using either Giveth or Aragon)
     function addRecipe(string memory name, address[] memory components, uint[] memory componentRecipe, uint[] memory quantities) public{
         recipes.push(Recipe(name, components, componentRecipe,quantities,0));
         nrecipes++;
+        emit NewRecipe(name);
     }
 
    function getComponents(uint recipeID) view public returns (address[] memory ){
