@@ -4,7 +4,7 @@
             "value":200,
             "linkWith":[  
             "Energy",
-            "Waste",
+            "Material",
             "Mobility"
             ],
             "children":[  
@@ -23,6 +23,14 @@
               {  
                   "name":"Dog walking",
                   "value":2
+              },
+              {  
+                "name":"Baby-sitting",
+                "value":10
+              },
+              {  
+                "name":"Web Development",
+                "value":50
               }
             ]
         },
@@ -31,7 +39,7 @@
             "value":200,
             "linkWith":[  
             "Time",
-            "Waste",
+            "Material",
             "Mobility"
             ],
             "children":[  
@@ -62,7 +70,7 @@
             ]
         },
         {  
-            "name":"Waste",
+            "name":"Material",
             "value":200,
             "linkWith":[  
             "Time",
@@ -75,8 +83,8 @@
                   "value":10
               },
               {  
-                  "name":"Organic",
-                  "value":2
+                  "name":"Biomass",
+                  "value":20
               },
               {  
                   "name":"water",
@@ -85,6 +93,10 @@
               {  
                   "name":"plastic",
                   "value":80
+              },
+              {  
+                "name":"Food",
+                "value":80
               }
             ]
         },
@@ -94,7 +106,7 @@
             "linkWith":[  
             "Time",
             "Energy",
-            "Waste"
+            "Material"
             ],
             "children":[  
               {  

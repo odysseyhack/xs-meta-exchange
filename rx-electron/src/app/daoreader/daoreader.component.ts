@@ -22,6 +22,7 @@ export class DaoReaderComponent {
   }
 
   ngOnInit(){
+    //add some sample data... later will read from the DAO
     this.resources.push({id:"124",version:1,name:"sample"})
     this.resources.push({id:"123",version:1,name:"team4fooddata"})
     this.resources.push({id:"125",version:1,name:"sampleResource"})
@@ -32,11 +33,7 @@ export class DaoReaderComponent {
         this.contractAbstraction = resAbstraction;
         this.contractAbstraction.deployed().then(deployed => {
           this.contractInstance = deployed
-          //console.log(deployed);
-          //deployed.Transfer({}, (err, ev) => {
-            //console.log('Transfer event came in, refreshing graph');
             this.refreshGraph();
-          //});
         });
 
       });
@@ -52,11 +49,6 @@ export class DaoReaderComponent {
         //const deployedResource = await this.resdata.deployed();
         console.log(this.contractInstance);
         var data = await this.contractInstance.listResourcesName()
-        //console.log('Resource updates', this.selectedresource);
-
-        //const resourceData = await this.contractInstance.ResourceDAO.call(this.selectedresource);
-       // let xs = await this.contractInstance("0x411462843112065019997341e316b64a6d46e513")
-       // var data = xs.listResourcesName()
         console.log('Found info: ' + data);
         //this.resources.push(resourceData);
       } catch (e) {
@@ -69,11 +61,12 @@ export class DaoReaderComponent {
     return o1.name === o2.name && o1.id === o2.id;
   }
 
+  /*check for new resources on the Resource DAO */
   monitorDAO() {
     this.web3Service.resourceObservable.subscribe((resources) => {
-      //this.resources = resources;
-      //this.model.resource = resources[0];
-      //this.refreshBalance();
+    //this.resources.push(resources);
+    //this.model.resource = resources[0];
+    this.refreshGraph();
     });
   }
 }

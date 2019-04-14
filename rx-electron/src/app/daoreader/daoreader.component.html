@@ -2,7 +2,7 @@
   <mat-card-header>Select Resource</mat-card-header>
   <mat-card-content>
     <mat-form-field>
-      <mat-select name="resourceSel" type="object" [compareWith]="compareObjects" (selectionChange)="getResource($event)" [(ngModel)]="selectedresource">
+      <mat-select name="resourceSel" type="object" [compareWith]="compareObjects" (selectionChange)="getResource()" [(ngModel)]="selectedresource">
         <mat-option *ngFor="let res of resources" [value]="res">{{res.name}}</mat-option>
       </mat-select>
     </mat-form-field>
