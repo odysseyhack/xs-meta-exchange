@@ -15,3 +15,12 @@ Get access to what you need, by giving what you have in excess.
 * yarn deploy
 * yarn start-frontend
 3. Utilize the frontend at port 8080
+
+
+## Resource Explorer
+
+Allows to visualize the inner working of the system by  connections between existing resources.
+
+* npm run start-rx
+
+![alt text](https://raw.githubusercontent.com/odysseyhack/xs-meta-exchange/blob/master/rx-electron/resourceExplorer.png)
