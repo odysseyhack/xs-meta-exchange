@@ -9,7 +9,8 @@ Get access to what you need, by giving what you have in excess.
 
 ## Instructions
 1. Set up MetaMask to work with Ganache https://truffleframework.com/docs/truffle/getting-started/truffle-with-metamask
-2. Enter the project with a terminal and execute the following commands
+2. Make sure you have ganache running at port 7545
+3. Enter the project with a terminal and execute the following commands
 * yarn install-deps
 * yarn deploy
 * yarn start-frontend
