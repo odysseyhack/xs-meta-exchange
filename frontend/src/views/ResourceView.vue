@@ -24,8 +24,8 @@
             </v-btn>
         </v-card-actions>
 
-        <create-recipe ref="createRecipe" :contract="contract" />
-        <request-resource ref="requestResource" />
+        <create-recipe ref="createRecipe" :contract="contract" @done="reload"/>
+        <request-resource ref="requestResource" :contract="contract" />
     </v-card>
 </template>
 
@@ -72,8 +72,10 @@
                     try {
                         truePrice = await this.contract.getTruePrice(i)
                     } catch (e) {
+                        console.error(e)
                         truePrice = ''
                     }
+                    console.log(truePrice)
                     Vue.set(this.recipes, i, {
                         name: recipe.name,
                         truePrice: truePrice !== '' ? truePrice.map((i) => i.words[0]) : truePrice
@@ -87,6 +89,9 @@
                     this.getRecipes()
                 })
             },
+            reload () {
+                this.$parent.routeKey = String(math.random())
+            }
         }
     }
 </script>

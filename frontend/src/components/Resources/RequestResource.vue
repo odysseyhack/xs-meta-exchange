@@ -30,6 +30,7 @@
     import ResourceAutofill from './Misc/ResourceAutofill'
 
     export default {
+        props: ['contract'],
         name: "CreateResource",
         data: () => ({
             isOpen: false,
@@ -51,7 +52,8 @@
             async submit () {
                 const accounts = await window.web3.eth.getAccounts()
                 console.log(this.label, this.recipeId, 'LOCATION', this.amount)
-                this.$store.state.XS.contracts.XS.request(this.label, this.recipeId, 'LOCATION', this.amount, { from: accounts[0] })
+                console.log(this.contract.address)
+                this.contract.requestRecipe(1, this.amount, 'location', { from: accounts[0] })
                 this.close()
             }
         },

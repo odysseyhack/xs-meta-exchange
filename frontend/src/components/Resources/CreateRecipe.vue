@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="isOpen" max-width="600">
         <v-card>
-            <v-card-title class="headline">Create recipe</v-card-title>
+            <v-card-title class="headline">Exchange Proposal</v-card-title>
 
             <v-card-text>
                 <v-text-field
@@ -11,7 +11,7 @@
                 ></v-text-field>
 
                 <v-spacer />
-                Recipe components
+                <h4>Exchange inputs</h4>
                 <v-layout column v-for="(component, index) in components">
                     <v-divider style="margin-bottom: 27px;" />
                     <v-layout row>
@@ -27,7 +27,7 @@
                             ></v-text-field>
                         </v-flex>
                     </v-layout>
-                    <recipe-dropdown v-if="component.resource !== null" :resourcedao-address="component.resource.address" />
+                    <recipe-dropdown v-if="component.resource !== null" :resourcedao-address="component.resource.address" :key="component.resource.address" />
                 </v-layout>
                 <v-flex row>
                     <v-btn round outline @click="addComponent">Add component</v-btn>
@@ -97,8 +97,8 @@
             },
             async submit () {
                 const accounts = await window.web3.eth.getAccounts()
-                console.log(this.label, this.selectedComponentAddresses, [0], this.components.map(() => 0))
-                this.contract.addRecipe(this.label, this.selectedComponentAddresses, [0], this.components.map(() => 0), { from: accounts[0] })
+                this.contract.addRecipe(this.label, this.selectedComponentAddresses, this.components.map((i) => i.resource.id), this.components.map((i) => i.quantity), { from: accounts[0] })
+                this.$emit('done')
                 this.close()
             }
         }

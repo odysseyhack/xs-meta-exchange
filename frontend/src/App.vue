@@ -23,6 +23,9 @@ import Web3 from 'web3'
 
 export default {
   name: 'App',
+  data: () => {
+
+  },
   mounted () {
     this.init()
   },
