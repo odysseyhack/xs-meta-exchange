@@ -23,4 +23,4 @@ Allows to visualize the inner working of the system by  connections between exis
 
 * npm run start-rx
 
-![alt text](https://raw.githubusercontent.com/odysseyhack/xs-meta-exchange/blob/master/rx-electron/resourceExplorer.png)
+![alt text](http://profeth.org/resourceexplorer.jpg)
