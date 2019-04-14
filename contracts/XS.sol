@@ -1,11 +1,11 @@
-pragma solidity ^0.5.6;
+ pragma solidity ^0.5.6;
 pragma experimental ABIEncoderV2;
 
 import "./ResourceDAO.sol";
 
 contract XS {
     
-    mapping( address => mapping(uint256 => uint256)) public wallets ; 
+    mapping( address => mapping(uint256 => int256)) public wallets ; 
     
 
     struct pathway{
@@ -56,16 +56,21 @@ contract XS {
     }
 
     
-    function subtractAssets(address _address, uint _resourceID, uint amount) public{
+    function subtractAssets(address _address, uint[] memory assets, uint amount) public {
         //TODO:check for permission
-        wallets[_address][_resourceID] -= amount;
+        for (uint i = 0; i<  assets.length; i++){
+           wallets[_address][i] -= int(assets[i] * amount);
+        }
+        
     }
     
-    function addAssets(address _address, uint _resourceID, uint amount) public{
-        //TODO:check for permissions
-        wallets[_address][_resourceID] += amount;
+      function addAssets(address _address, uint[] memory assets, uint amount) public {
+        //TODO:check for permission
+        for (uint i = 0; i<  assets.length; i++){
+           wallets[_address][i] += int(assets[i] * amount);
+        }
+        
     }
-    
 
     function createResource(string memory label) public returns (address){
         nresources += 1;

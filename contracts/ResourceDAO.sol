@@ -23,6 +23,7 @@ contract ResourceDAO //is also a full `DAO' (using either Giveth or Aragon)
     struct Request {
         address requester;
         uint recipeID;
+        uint[] trueprice;
         uint amounts;
         string location; //(geohash)
         uint8 status;
@@ -74,8 +75,9 @@ contract ResourceDAO //is also a full `DAO' (using either Giveth or Aragon)
     // The
     // call for specific recipe
     function requestRecipe(uint _recipeID, uint _amount, string memory _location) public
-    {
-        Request memory order = Request (msg.sender, _recipeID, _amount,  _location, 0 , now);
+    {   
+        uint [] memory trueprice = getTruePrice(_recipeID); //calculate the cost per unit
+        Request memory order = Request (msg.sender, _recipeID,  trueprice, _amount, _location, 0 , now);
         nrequests += _amount;
         requests.push(order);
 
@@ -104,6 +106,7 @@ contract ResourceDAO //is also a full `DAO' (using either Giveth or Aragon)
       uint status,
       uint creation
     ){
+        
       Request storage order =  requests[ requestId ];
       requester = order.requester;
       amounts = order.amounts;
@@ -128,8 +131,8 @@ contract ResourceDAO //is also a full `DAO' (using either Giveth or Aragon)
         order.status = 2;
         //Transfer agreed amount from requester to supplier
 
-        exchange.addAssets(msg.sender,id, order.amounts);
-        exchange.subtractAssets(order.requester, id, order.amounts);//+= order.amounts;
+        exchange.addAssets(msg.sender,order.trueprice, order.amounts);
+        exchange.subtractAssets(order.requester,order.trueprice, order.amounts);
         //exchange.wallets[order.requester][id] -= order.amounts;
         //exchange.wallets[msg.sender][id] += order.amounts;
 
