@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { Resource } from '../models/resource';
 import {Web3Service} from '../util/web3.service';
-import { emit } from 'cluster';
+import { of, Observable } from 'rxjs';
 
 const resource_artifacts = require('../../../../build/contracts/XS.json');
 
@@ -16,6 +16,7 @@ export class DaoReaderComponent {
   selectedresource: Resource
   contractAbstraction: any
   contractInstance: any
+  resourcesfound:Observable<string>
   
   constructor(private web3Service: Web3Service){
     console.log('Constructor: ' + web3Service);
@@ -50,6 +51,7 @@ export class DaoReaderComponent {
         console.log(this.contractInstance);
         var data = await this.contractInstance.listResourcesName()
         console.log('Found info: ' + data);
+        this.resourcesfound = of(data)
         //this.resources.push(resourceData);
       } catch (e) {
         console.log(e);
